@@ -38,6 +38,71 @@ def sliceImage(img,divisions):
     return new_images
 
 
+def CompareHist(image1, image2, methodtype="Correlation"):
+    image1_r = cv2.resize(image1, (1024, 540),
+               interpolation = cv2.INTER_NEAREST)
+    image2_r = cv2.resize(image2, (1024, 540),
+               interpolation = cv2.INTER_NEAREST)
+################# Method1: Using the OpenCV cv2.compareHist function ###################
+# cv2.compareHist(H1, H2, method)
+
+# The cv2.compareHist function takes three arguments: 
+#     H1, which is the first histogram to be compared, 
+#     H2, the second histogram to be compared, 
+#     and method, which is a flag indicating which comparison method should be performed.
+
+# initialize OpenCV methods for histogram comparison
+    OPENCV_METHODS = (
+    	("Correlation", cv2.HISTCMP_CORREL),
+    	("Chi-Squared", cv2.HISTCMP_CHISQR),
+    	("Intersection", cv2.HISTCMP_INTERSECT),
+    	("Hellinger", cv2.HISTCMP_BHATTACHARYYA))
+    
+    
+    # We start by initializing a reverse variable to False.
+    #  This variable handles how sorting the results dictionary will be performed. 
+    #  For some similarity functions a LARGER value indicates higher similarity 
+    #          (Correlation and Intersection).
+    #  And for others, a SMALLER value indicates higher similarity 
+    #          (Chi-Squared and Hellinger).
+    
+    # loop over the comparison methods
+    for (methodName, method) in OPENCV_METHODS:
+    	# initialize the results dictionary and the sort
+    	# direction
+    	results = {}
+    	reverse = False
+        
+        # if we are using the correlation or intersection
+    	# method, then sort the results in reverse order
+    	if methodName in ("Correlation", "Intersection"):
+    		reverse = True
+            
+    if methodtype == "Correlation":
+        d = cv2.compareHist(image1_r, image2_r, OPENCV_METHODS[0][1])
+        #print(d)
+    elif methodtype == "Chi-Squared":
+        d = cv2.compareHist(image1_r, image2_r, OPENCV_METHODS[1][1])
+        #print(d)
+    elif methodtype == "Intersection":        
+        d = cv2.compareHist(image1_r, image2_r, OPENCV_METHODS[2][1])
+        #print(d)
+    elif methodtype == "Hellinger":
+        d = cv2.compareHist(image1_r, image2_r, OPENCV_METHODS[3][1])
+        #print(d)
+
+    if (methodtype == "Correlation") or (methodtype == "Intersection"):
+        if d > 1000000:
+            print("Similar")
+        else:
+            print("Not Similar")
+    elif (methodtype ==  "Chi-Squared") or (methodtype == "Hellinger"):
+        if d < 100000:
+            print("Similar")
+        else:
+            print("Not Similar")
+
+#CompareHist(image1,image2,"Intersection")
 
 def keyFramesExtracion(cap, threshold):
     if (cap.isOpened()== False):
