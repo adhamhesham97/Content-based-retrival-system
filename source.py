@@ -2,8 +2,6 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-
 def sliceImage(img,divisions):
     # img = cv.imread(Image_path)
 
@@ -37,6 +35,13 @@ def sliceImage(img,divisions):
 
     return new_images
 
+'''
+divisions= 16
+image= cv.imread("image.jpg")
+# print(image)
+slicing= sliceImage(image,divisions)
+# print(slicing)
+'''
 
 def CompareHist(image1, image2, methodtype="Correlation"):
     image1_r = cv2.resize(image1, (1024, 540),
@@ -102,7 +107,9 @@ def CompareHist(image1, image2, methodtype="Correlation"):
         else:
             print("Not Similar")
 
-#CompareHist(image1,image2,"Intersection")
+'''
+CompareHist(image1,image2,"Intersection")
+'''
 
 def keyFramesExtracion(cap, threshold):
     if (cap.isOpened()== False):
@@ -174,14 +181,7 @@ def keyFramesExtracion(cap, threshold):
    
     return keyFrames
 
-
-# divisions= 16
-# image= cv.imread("image.jpg")
-# # print(image)
-# slicing= sliceImage(image,divisions)
-# # print(slicing)
-
-
+'''
 video_path = 'videos/Lane Detection.mp4'
 threshold = 6
 cap = cv2.VideoCapture(video_path)
@@ -189,3 +189,9 @@ keyFrames = keyFramesExtracion(cap, threshold)
 for keyFrame in keyFrames:
     plt.imshow(cv2.cvtColor(keyFrame, cv2.COLOR_BGR2RGB))
     plt.show()
+'''
+
+
+
+
+
