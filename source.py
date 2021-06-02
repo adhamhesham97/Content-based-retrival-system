@@ -213,7 +213,44 @@ for keyFrame in keyFrames:
     plt.show()
 '''
 
+''''''
 
+def Histogram(image):
+    
+
+    histR, bin_edges = np.histogram(image[:, :, 0], bins=256, range=(0, 256))
+    histG, bin_edges = np.histogram(image[:, :, 1], bins=256, range=(0, 256))
+    histB, bin_edges = np.histogram(image[:, :, 2], bins=256, range=(0, 256))
+        
+   
+    return histR,histG,histB
+    
+
+'''extracting features to key frames extracted from videos '''
+def keyframesfeatures(cap,threshold):
+    keyframes=keyFramesExtracion(cap,threshold)
+    avgRGB=[]
+    histogram=[]
+    layoutHistogram=[]
+    for frame in range(keyframes):
+        avgRGB[frame]= Histogram(frame)
+        histogram[frame] = RGB_MEAN(frame)
+        layoutHistogram[frame]= layoutHistogram(frame)
+    
+    
+    
+    return[avgRGB,histogram ,layoutHistogram]
+
+
+'''Adding histogram to image slices '''
+
+def layoutHistogram(image,divisions):
+    image_slices= sliceImage(image, divisions)
+    histogram= [] 
+    for image in range(image_slices):
+        histogram[image]=Histogram(image)
+    
+    return histogram 
 
 
 
