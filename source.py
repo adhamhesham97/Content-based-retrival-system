@@ -111,6 +111,28 @@ def CompareHist(image1, image2, methodtype="Correlation"):
 CompareHist(image1,image2,"Intersection")
 '''
 
+def RGB_MEAN(image):
+    avg_color_per_row = np.average(image, axis=0)
+    #print(avg_color_per_row)
+    avg_color = np.average(avg_color_per_row, axis=0) 
+    if avg_color[0] > 1 and avg_color[1] > 1  and avg_color[2] > 1 : ##JPEG Format
+        avg_color /=256
+    #print(avg_color)
+    return avg_color #BGR Values
+
+
+def Compare_avg_RGB(image1, image2):
+    avg1=RGB_MEAN(image1)
+    #print(avg1)
+    avg2=RGB_MEAN(image2)
+    #print(avg2)
+    if abs(avg2[0]-avg1[0]) < 0.1 and abs(avg2[1]-avg1[1]) < 0.1 and abs(avg2[2]-avg1[2]) < 0.1:
+        print("Similar")
+    else:
+        print("NOT Similar")
+
+#Compare_avg_RGB(image1,image2)
+
 def keyFramesExtracion(cap, threshold):
     if (cap.isOpened()== False):
        print("Error opening video file")
