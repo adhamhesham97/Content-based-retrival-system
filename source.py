@@ -111,20 +111,11 @@ slicing= sliceImage(image,divisions)
 '''
 CompareHist(image1,image2,"Intersection")
 '''
-def CompareHist (image1,image2):
-    histo1=Histogram(image1)
-    histo2=Histogram(image2)
-    
-    #mini=0
+def CompareHist(hist_1, hist_2):
+    minima = np.minimum(hist_1, hist_2)
+    intersection = np.true_divide(np.sum(minima), np.sum(hist_2))
+    return intersection
 
-    mminima=np.sum(np.minimum(histo1,histo2))
-    distance=np.divide(mminima,np.sum(histo2))
-    
-    #print(distance)
-    if distance<0.1:
-        return 1
-    else:
-        return 0
     
 
 def RGB_MEAN(image):
@@ -137,17 +128,19 @@ def RGB_MEAN(image):
     return avg_color #BGR Values
 
 
-def Compare_avg_RGB(image1, image2):
-    avg1=RGB_MEAN(image1)
-    #print(avg1)
-    avg2=RGB_MEAN(image2)
+def Compare_avg_RGB(avg1, avg2):
+
+    return abs(avg2[0]-avg1[0])+abs(avg2[1]-avg1[1])+abs(avg2[2]-avg1[2])
+        # avg1=RGB_MEAN(image1)
+    # #print(avg1)
+    # avg2=RGB_MEAN(image2)
     #print(avg2)
-    if abs(avg2[0]-avg1[0]) < 0.1 and abs(avg2[1]-avg1[1]) < 0.1 and abs(avg2[2]-avg1[2]) < 0.1:
-        #print("Similar")
-        return 1
-    else:
-        #print("NOT Similar")
-        return 0
+    # if abs(avg2[0]-avg1[0]) < 0.1 and abs(avg2[1]-avg1[1]) < 0.1 and abs(avg2[2]-avg1[2]) < 0.1:
+    #     #print("Similar")
+    #     return 1
+    # else:
+    #     #print("NOT Similar")
+    #     return 0
 
 #Compare_avg_RGB(image1,image2)
 
@@ -248,29 +241,51 @@ def Histogram(image):
 def keyframesfeatures(cap,threshold):
     keyframes=keyFramesExtracion(cap,threshold)
     avgRGB=[]
-    histogram=[]
+    histograms=[]
     layoutHistogram=[]
+    #frames=[[]]
     for frame in range(keyframes):
-        avgRGB[frame]= RGB_MEAN(frame)
-        histogram[frame] = Histogram(frame)
-        layoutHistogram[frame]= layoutHistogram(frame)
+        avg_RGB= RGB_MEAN(frame)
+        avgRGB.append(avg_RGB)
+        histogram = Histogram(frame)
+        histograms.append(histogram)
+        layout_Histogram= SeveralHistograms(frame)
+        layoutHistogram.append(layout_Histogram)
+
+        
     
     
-    
-    return[avgRGB,histogram ,layoutHistogram]
+    return avgRGB,histograms ,layoutHistogram
 
 
 '''Adding histogram to image slices '''
 
+
+
+# def layoutHistogram(image,divisions):
+#     image_slices= sliceImage(image, divisions)
+#     histogram= [] 
+#     for image in range(image_slices):
+#         histogram[image]=Histogram(image)
+
+#     return histogram 
 def SeveralHistograms(image,divisions):
     image_slices= sliceImage(image, divisions)
     histogram= [] 
     for image in range(image_slices):
-        histogram[image]=Histogram(image)
+        hist=Histogram(image)
+        histogram.append(hist)
     
-    return histogram 
+    return histogram
+
+def Compare_SeveralHistograms(hist1,hist2):  ####hist = 16 histograms 
+    Similar=[]
+    for i in range(len(hist1)):
+        Similar[i]=CompareHist(hist1[i], hist2[i])
+    return np.sum(Similar)/len(hist1)
 
 
+'''
 def Similarity_Video(Video_I,Method):           #########Method : 0 for RGB, 1 for Histogram, 2 for Several histograms
     Keyframes_I=keyFramesExtracion(Video_I)
     Similar=[]
@@ -295,5 +310,53 @@ def Similarity_Video(Video_I,Method):           #########Method : 0 for RGB, 1 f
     
     
     return max_index
+'''
 
 
+def Similarity_Video(Method,VideoFeatures1,VideoFeatures2): #######Video_L[ [avgRGB,histogram,layoutHistorgam],
+                                                         #  [avgRGB,histogram,layoutHistorgam],....] 
+    #metric=[]
+    if(len(VideoFeatures1)<len(VideoFeatures2)):
+        video1=VideoFeatures1
+        video2=VideoFeatures2
+    else :
+        video1=VideoFeatures2
+        video2=VideoFeatures1
+     
+    Bool= [False] * len(video2)
+    metric = 0 * len(video1) 
+    m=0*len(video2)
+    for i in video1:
+        
+        for j in video2:
+            if(Bool[j])==False:
+                if (Method==0):
+                    m[j]=Compare_avg_RGB(video1[i][0], video2[j][0])
+                elif(Method==1):
+                    m[j]=CompareHist(video1[i][1],video2[j][1])
+                elif(Method==2):
+                    m[j]=Compare_SeveralHistograms(video1[i][2],video2[j][2])
+            else:
+                continue    
+        maxvalue=max(m)
+        max_index=m.index(maxvalue)
+        Bool[max_index]=True
+        metric[i]=maxvalue
+            
+            
+            
+            
+    return np.divide(np.sum(metric),len(metric))
+    
+    
+    
+    
+    
+    # if (Method==0): ############## RGB method
+    #     metric=Compare_avg_RGB(Features1[0],Features2[0])
+    # elif(Method==1):
+    #     metric=CompareHist(Features1[1],Features2[1])
+    # elif(Method==2):
+    #     metric=Compare_SeveralHistograms(Features1[2],Features2[2])
+    
+    
