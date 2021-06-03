@@ -4,15 +4,22 @@ from tkinter import filedialog
 from tkvideo import tkvideo
 from PIL import ImageTk, Image
 from DB import *
-from source import *
+#from source import *
+from main import *
 import os
 import numpy as np
 import cv2 as cv
-# deleteDB()
+# from histogram import *
+# from avgRGB import *
+# from SeveralHist import *
+
+
 # buildDB()
 
-def BuildDB (videos_path,images_path):
-
+def Build_DB (videos_path,images_path):
+    #con = sl.connect('myDB.db')
+    #buildDB()
+    #deleteDB()
     for filename in os.listdir(images_path):
         img=cv.imread(os.path.join(images_path,filename))
         insertImage(filename,RGB_MEAN(img),Histogram(img),SeveralHistograms(img,16))
@@ -22,14 +29,14 @@ def BuildDB (videos_path,images_path):
         RGB,Hist,LayoutHist=keyframesfeatures(KF)
         insertvideo(filename,RGB,Hist,LayoutHist)
        
-    lst=getImages()
-    print(lst)
+    # lst=getImages()
+    # print(lst)
     return
 
 
 
 def BuildButton ():
-    BuildDB('videos','images')
+    Build_DB('videos','images')
     
     return
 

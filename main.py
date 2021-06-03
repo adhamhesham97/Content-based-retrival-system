@@ -4,7 +4,7 @@ import DB
 import matplotlib.pyplot as plt
 from histogram import *
 from avgRGB import *
-from severalHist import *
+from SeveralHist import *
 
 
 def keyFramesExtracion(cap, threshold):

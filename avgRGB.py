@@ -15,15 +15,17 @@ def RGB_MEAN(image):
 
 
 def Compare_avg_RGB(avg1, avg2):
-    return abs(1-np.sqrt(((avg2[0]-avg1[0])**2)+((avg2[1]-avg1[1])**2)+((avg2[2]-avg1[2])**2)))
+    return 1-((abs(avg1[0]-avg2[0])+abs(avg1[1]-avg2[1])+abs(avg1[2]-avg2[2]))/765) ##### 1 is similar
 
 
-# path= 'images/1_1.png'
-# path2= 'images/2_1.png' 
+# path= 'images/4.jpeg'
+# path2= 'images/5.jpeg' 
 # img1= cv2.imread(path)
 # img2= cv2.imread(path2)
 
 # avg1 = RGB_MEAN(img1)
 # avg2 = RGB_MEAN(img2)
 
-# similarity_rgb = Compare_avg_RGB(avg1,avg2)
+
+# similarity_rgb = Compare_avg_RGB((0,252,0),(0,0,0))
+# print(similarity_rgb)
