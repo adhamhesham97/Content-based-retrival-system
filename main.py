@@ -2,75 +2,9 @@ import cv2
 import numpy as np
 import DB
 import matplotlib.pyplot as plt
-
-def sliceImage(img,divisions):
-    # img = cv.imread(Image_path)
-    # dimensions= img.shape
-    # print(dimensions)
-
-    height = img.shape[0]
-    width = img.shape[1]
-    x=0
-    y=0
-    new_height = height/np.sqrt(divisions)
-    # print(new_height)
-    new_width = width/np.sqrt(divisions)
-    # print(new_width)
-    new_images=[]
-    
-    #image cropping 
-    i=0
-    for i in range(int(np.sqrt(divisions))):
-        y=0
-        for j in range(int(np.sqrt(divisions))):   
-            image= img[ int(y): int(new_height+y), int(x) :int(new_width+x) , : ]
-            y= y + new_height 
-            # print(image)            
-            new_images.append(image)
-            # new_image_path = Image_path[0 : 4]  + str(i) + str(j) + '.jpg'
-            # cv.imwrite(new_image_path, image)
-        
-        x= x+ new_width
-    
-    # image_parts= image_slicer.slice(Image_path, divisions)
-
-    return new_images
-
-'''
-divisions= 16
-image= cv.imread("image.jpg")
-# print(image)
-slicing= sliceImage(image,divisions)
-# print(slicing)
-'''
-
-def CompareHist(hist_1, hist_2):
-    minima = np.minimum(hist_1, hist_2)
-    intersection = np.true_divide(np.sum(minima), np.sum(hist_2))
-    return intersection
-
-
-
-
-    
-
-def RGB_MEAN(image):
-    avg_color_per_row = np.average(image, axis=0)
-    #print(avg_color_per_row)
-    avg_color = np.average(avg_color_per_row, axis=0) 
-    if avg_color[0] > 1 or avg_color[1] > 1  or avg_color[2] > 1 : 
-        avg_color /=256
-    # print(avg_color)
-    return avg_color #BGR Values
-
-
-
-
-def Compare_avg_RGB(avg1, avg2):
-    
-    return 1-np.sqrt(((avg2[0]-avg1[0])**2)+((avg2[1]-avg1[1])**2)+((avg2[2]-avg1[2])**2))
-
-#Compare_avg_RGB(image1,image2)
+from histogram import *
+from avgRGB import *
+from severalHist import *
 
 
 def keyFramesExtracion(cap, threshold):
@@ -99,9 +33,7 @@ def keyFramesExtracion(cap, threshold):
                 # print ("Got P-Frame")
                 # plt.imshow(cv2.cvtColor(curr_frame, cv2.COLOR_BGR2RGB))
                 # plt.show()
-            prev_grey_frame = curr_grey_frame
-            
-   
+            prev_grey_frame = curr_grey_frame   
     return keyFrames
 
 '''
@@ -113,31 +45,6 @@ for keyFrame in keyFrames:
     plt.imshow(cv2.cvtColor(keyFrame, cv2.COLOR_BGR2RGB))
     plt.show()
 '''
-
-
-
-def Histogram(image):
-    
-
-    histR, bin_edges = np.histogram(image[:, :, 0], bins=256, range=(0, 256))
-    histG, bin_edges = np.histogram(image[:, :, 1], bins=256, range=(0, 256))
-    histB, bin_edges = np.histogram(image[:, :, 2], bins=256, range=(0, 256))
-        
-   
-    return histR,histG,histB
-    
- 
-    
-'''Adding histogram to image slices '''
-
-def SeveralHistograms(image,divisions):
-    image_slices= sliceImage(image, divisions)
-    histogram= [] 
-    for image in image_slices:
-        histogram.append(Histogram(image))
-    
-    return histogram 
-
 
 '''extracting features to key frames extracted from videos '''
 def keyframesfeatures(keyframes):
@@ -152,8 +59,6 @@ def keyframesfeatures(keyframes):
       
         layoutHistogram.append(SeveralHistograms(frame,16))
         # print(len(SeveralHistograms(frame,16)))
-    
-    
     return avgRGB, Histograms ,layoutHistogram
 
 ''''
@@ -171,18 +76,6 @@ avgrgb, histogram, layoutHistogram= keyframesfeatures(keyFrames)
 print(layoutHistogram[0][0]) 
 
 '''
-   
-
-
-'''    compare 2 images slices with each other '''
-def Compare_SeveralHistograms(hist1,hist2):  ####hist = 16 histograms 
-    Similar=[]
-    for i in range(len(hist1)):
-        Similar[i]=CompareHist(hist1[i], hist2[i])
-    return np.sum(Similar)/len(hist1)
-
-
-
 
 def Similarity_Video(Method,VideoFeatures1,VideoFeatures2): #######Video_L[ [avgRGB,histogram,layoutHistorgam],
                                                          #  [avgRGB,histogram,layoutHistorgam],....] 
@@ -253,20 +146,6 @@ def Similarity_Video(Method,VideoFeatures1,VideoFeatures2): #######Video_L[ [avg
 
 
 
-''' comparing histogram, rgb and several histogram '''
-path= 'images/4.jpeg'
-path2= 'images/4.jpeg' 
-img1= cv2.imread(path)
-img2= cv2.imread(path2)
-
-hist1= Histogram(img1)
-hist2= Histogram(img2)
-
-avg1 = RGB_MEAN(img1)
-avg2 = RGB_MEAN(img2)
-
-similarity_rgb = Compare_avg_RGB(avg1,avg2)
-similarity_histogram = CompareHist(hist1, hist2 )
 
 
 
