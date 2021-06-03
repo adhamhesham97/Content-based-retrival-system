@@ -10,50 +10,70 @@ import sqlite3 as sl
 def listToStr(lst):
     string=''
     try:
-        for array in lst:
-            flag=True
-            for element in array:
-                if (flag):
-                    string += str(element)
-                    flag=False
-                else:
-                    string += '&' + str(element)
-            string += '#'
+        for arr in lst:
+            for array in arr:
+                flag=True
+                for element in array:
+                    if (flag):
+                        string += str(element)
+                        flag=False
+                    else:
+                        string += '&' + str(element)
+                string += '#'
+            string +='$'
         return string[:-1]
     except:
-        flag=True
-        for element in lst:
-                if (flag):
-                    string += str(element)
-                    flag=False
-                else:
-                    string += '&' + str(element)
+        try:
+            for array in lst:
+                flag=True
+                for element in array:
+                    if (flag):
+                        string += str(element)
+                        flag=False
+                    else:
+                        string += '&' + str(element)
+                string += '#'
+            return string[:-1]
+        except:
+            flag=True
+            for element in lst:
+                    if (flag):
+                        string += str(element)
+                        flag=False
+                    else:
+                        string += '&' + str(element)
     return string
 
 '''
-lst=[[1.0, 0.05, 5.2555], [12.0, 15.6, 65.0]]
+lst=[[[1.0, 0.05, 5.2555], [12.0, 15.6, 65.0]],[[1.0, 0.05, 5.2555], [12.0, 15.6, 65.0]]]
 print(listToStr(lst)) # & sparates elements # separates arrays
 '''
 
 def strToList(string):
-    arrayStrings = list(string.split("#"))
-    li=[]
-    for arr in arrayStrings:
-        li.append(list(arr.split("&")))
+    arr = list(string.split("$"))
+    lists=[]
+    for x in arr:
+        lists.append(list(x[:-1].split("#")))
     
-    arrays=[]
-    for lst in li:
-        arrays.append([float(i) for i in lst])
+    for i in range(len(lists)):
+        for j in range(len(lists[i])):
+            lists[i][j] = list(lists[i][j].split("&"))
+            lists[i][j] = [float(i) for i in lists[i][j]]
     
-    if len(arrays)==1:
-        return arrays[0]
-    return arrays
+    if(len(lists)==1):
+        lists = lists[0]
+    if(len(lists)==1):
+        lists = lists[0]
+    
+    return lists
+    
 
 '''
-string='1&0.05&5.2555#12&15.6&65' # & sparates elements # separates arrays
+string='1.0&0.05&5.2555#12.0&15.6&65.0#$1.0&0.05&5.2555#12.0&15.6&65.0#' # & sparates elements # separates arrays
 print((strToList(string)))
 
-lst=[[1.0, 0.05, 5.2555], [12.0, 15.6, 65.0]]
+lst=[[[1.0, 0.05, 5.2555], [12.0, 15.6, 65.0]],[[1.0, 0.05, 5.2555], [12.0, 15.6, 65.0]]]
+print(lst)
 print(strToList(listToStr(lst))) # & sparates elements # separates arrays
 '''
 
@@ -93,8 +113,13 @@ def buildDB():
 
 def deleteDB(): 
     import os
-    os.remove("myDB.db")
+    try:
+        os.remove("myDB.db")
+    except:
+        con.close()
+        os.remove("myDB.db")
     buildDB()
+
 
 def insertImage(path, averageRGB, histogram, layoutHistograms):
     
