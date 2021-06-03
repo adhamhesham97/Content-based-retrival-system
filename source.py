@@ -236,48 +236,55 @@ def Histogram(image):
    
     return histR,histG,histB
     
-
-'''extracting features to key frames extracted from videos '''
-def keyframesfeatures(cap,threshold):
-    keyframes=keyFramesExtracion(cap,threshold)
-    avgRGB=[]
-    histograms=[]
-    layoutHistogram=[]
-    #frames=[[]]
-    for frame in range(keyframes):
-        avg_RGB= RGB_MEAN(frame)
-        avgRGB.append(avg_RGB)
-        histogram = Histogram(frame)
-        histograms.append(histogram)
-        layout_Histogram= SeveralHistograms(frame)
-        layoutHistogram.append(layout_Histogram)
-
-        
+ 
     
-    
-    return avgRGB,histograms ,layoutHistogram
-
-
 '''Adding histogram to image slices '''
 
-
-
-# def layoutHistogram(image,divisions):
-#     image_slices= sliceImage(image, divisions)
-#     histogram= [] 
-#     for image in range(image_slices):
-#         histogram[image]=Histogram(image)
-
-#     return histogram 
 def SeveralHistograms(image,divisions):
     image_slices= sliceImage(image, divisions)
     histogram= [] 
-    for image in range(image_slices):
-        hist=Histogram(image)
-        histogram.append(hist)
+    for image in image_slices:
+        histogram.append(Histogram(image))
     
-    return histogram
+    return histogram 
 
+
+'''extracting features to key frames extracted from videos '''
+def keyframesfeatures(keyframes):
+    avgRGB=[]
+    Histograms=[]
+    layoutHistogram=[]
+    for frame in keyframes:
+        
+        avgRGB.append(RGB_MEAN(frame))
+   
+        Histograms.append(Histogram(frame))
+      
+        layoutHistogram.append(SeveralHistograms(frame,16))
+        # print(len(SeveralHistograms(frame,16)))
+    
+    
+    return avgRGB, Histograms ,layoutHistogram
+
+''''
+testing 
+'''
+'''
+video_path = 'videos/acrobacia.mp4'
+threshold = 6
+cap = cv2.VideoCapture(video_path)
+keyFrames = keyFramesExtracion(cap, threshold)
+# print(len(keyFrames))
+avgrgb, histogram, layoutHistogram= keyframesfeatures(keyFrames)
+
+# print("layout histogram", layoutHistogram)
+print(layoutHistogram[0][0]) 
+
+'''
+   
+
+
+'''    compare 2 images slices with each other '''
 def Compare_SeveralHistograms(hist1,hist2):  ####hist = 16 histograms 
     Similar=[]
     for i in range(len(hist1)):
