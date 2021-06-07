@@ -121,6 +121,13 @@ def deleteDB():
     buildDB()
 
 
+def clearDB(): 
+    # con = sl.connect('myDB.db')
+    con.execute("DELETE FROM videoImages")
+    con.execute("DELETE FROM video")
+    con.execute("DELETE FROM image")
+    
+
 def insertImage(path, averageRGB, histogram, layoutHistograms):
     
     sql = 'INSERT INTO image (path, averageRGB, histogram, layoutHistograms) values(?, ?, ?, ?)'
@@ -187,6 +194,12 @@ def insertvideo(path, averageRGB, histogram, layoutHistograms):
         
     return
 
+def getKeyFrameVideo(image_id):
+    data = con.execute("SELECT * FROM videoImages where image_id = "+str(image_id))
+    for row in data:
+        data2 = con.execute("SELECT * FROM video where id = "+ str(row[0]))
+        for row2 in data2:
+            return row2[1]
 
 def getVideos(video_ids=None):
     if(video_ids is None):
