@@ -20,6 +20,7 @@ def Build_DB (videos_path,images_path):
     #con = sl.connect('myDB.db')
     #buildDB()
     #deleteDB()
+    clearDB()
     for filename in os.listdir(images_path):
         img=cv.imread(os.path.join(images_path,filename))
         insertImage(filename,RGB_MEAN(img),Histogram(img),SeveralHistograms(img,16))

@@ -20,7 +20,8 @@ def listToStr(lst):
                     else:
                         string += '&' + str(element)
                 string += '#'
-            string +='$'
+            string = string[:-1] + '$'
+            # string +='$'
         return string[:-1]
     except:
         try:
@@ -50,10 +51,11 @@ print(listToStr(lst)) # & sparates elements # separates arrays
 '''
 
 def strToList(string):
+    # print(string)
     arr = list(string.split("$"))
     lists=[]
     for x in arr:
-        lists.append(list(x[:-1].split("#")))
+        lists.append(list(x.split("#")))
     
     for i in range(len(lists)):
         for j in range(len(lists[i])):
@@ -69,7 +71,7 @@ def strToList(string):
     
 
 '''
-string='1.0&0.05&5.2555#12.0&15.6&65.0#$1.0&0.05&5.2555#12.0&15.6&65.0#' # & sparates elements # separates arrays
+string='1.0&0.05&5.2555#12.0&15.6&65.0$1.0&0.05&5.2555#12.0&15.6&65.0' # & sparates elements # separates arrays
 print((strToList(string)))
 
 lst=[[[1.0, 0.05, 5.2555], [12.0, 15.6, 65.0]],[[1.0, 0.05, 5.2555], [12.0, 15.6, 65.0]]]
@@ -124,8 +126,11 @@ def deleteDB():
 def clearDB(): 
     # con = sl.connect('myDB.db')
     con.execute("DELETE FROM videoImages")
+    con.execute('delete from sqlite_sequence where name=\'videoImages\'')
     con.execute("DELETE FROM video")
+    con.execute('delete from sqlite_sequence where name=\'video\'')
     con.execute("DELETE FROM image")
+    con.execute('delete from sqlite_sequence where name=\'image\'')
     
 
 def insertImage(path, averageRGB, histogram, layoutHistograms):
@@ -141,6 +146,20 @@ def insertImage(path, averageRGB, histogram, layoutHistograms):
     return image_id
 
 def getImages(image_ids=None):
+    '''
+    
+
+    Parameters
+    ----------
+    image_ids : TYPE, optional
+        DESCRIPTION. The default is None.
+
+    Returns
+    -------
+    list contains tuples [(image1), (image2), (image3)]
+    each image tuple (image_id, path, avgRGB, histogram, layoutHistograms)
+
+    '''
     if(image_ids is None):
         data = con.execute("SELECT * FROM image")
     else:
@@ -157,7 +176,7 @@ def getImages(image_ids=None):
             
     lst=[]
     for row in data:
-        lst.append(row)
+        lst.append((row[0],row[1],strToList(row[2]),strToList(row[3]),strToList(row[4])))
     return lst
 
 '''
@@ -202,6 +221,22 @@ def getKeyFrameVideo(image_id):
             return row2[1]
 
 def getVideos(video_ids=None):
+    '''
+    
+    Parameters
+    ----------
+    video_ids : TYPE, optional
+        DESCRIPTION. The default is None.
+
+    Returns
+    -------
+    list of tuples [(video1), (video2), (video3)]
+    each tuple contains (video_id, path, [key frames])
+    each key frames list contains tuples [(keyframe1), (keyframe2), (keyframe3)]
+    each keyframe tuple (image_id, '0', avgRGB, histogram, layoutHistograms)
+    
+
+    '''
     if(video_ids is None):
         data = con.execute("SELECT * FROM video")
         data2 = con.execute("SELECT * FROM videoImages ORDER BY video_id, image_id")
@@ -240,7 +275,8 @@ def getVideos(video_ids=None):
     for row in data:
         frames=[]
         for image_id in videos_images_ids[i][1]:
-                frames.append(getImages(image_id)[0])
+            # print(getImages(image_id))
+            frames.append(getImages(image_id)[0])
         videos.append((row[0],row[1],frames))
         i+=1
     return videos
