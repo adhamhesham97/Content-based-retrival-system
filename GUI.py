@@ -102,52 +102,93 @@ def ShowImage():
         
         IPimg_L=Label(window,text="Input Image",bg='#1f666b',height=1,width=10,bd=6,font='Helvetica 11 bold')
         IPimg_L.place(x=20,y=160)
+        img = cv.imread(ent1.get())
+        images = getImages()
+        max_similarity = 0
         if(Method=="Average RGB"):
             ############################Function of Average RGB to return image path##########
-            image_path='image2.jpg'
+            avgRGB = RGB_MEAN(img) ####
+            for image in images:
+                similarity = Compare_avg_RGB(avgRGB, image[2])
+                if(similarity > max_similarity):
+                    max_similarity = similarity
+                    image_index = image[0]
+                    image_path = image[1]
+                
+            # image_path='image2.jpg'
         elif(Method=="Histogram"):
             ############################Function of Histogram to return image path##########
             image_path='image3.jpg'
+            # TODO
         elif(Method=="Several Histograms"):
             ############################Function of Histogram to return image path##########
             image_path='image4.jpg'
+            # TODO
         
+        
+        if(max_path == '0'): #video not image
+            video_Path = getKeyFrameVideo(image_index)[1]
+            # TODO
+        else:
+            photo1=ImageTk.PhotoImage(Image.open(image_path))    
+            R_img=Label(window)
+            R_img.config(image=photo1)
+            R_img.image=photo1
+            R_img.place(x=400,y=200)
+            
+            R_img_L=Label(window,text="Retieved Image",bg='#1f666b',height=1,width=12,bd=6,font='Helvetica 11 bold')
+            R_img_L.place(x=450,y=160)
     
-        photo1=ImageTk.PhotoImage(Image.open(image_path))    
-        R_img=Label(window)
-        R_img.config(image=photo1)
-        R_img.image=photo1
-        R_img.place(x=400,y=200)
-        
-        R_img_L=Label(window,text="Retieved Image",bg='#1f666b',height=1,width=12,bd=6,font='Helvetica 11 bold')
-        R_img_L.place(x=450,y=160)
+    
     elif(Type=="Video"):
         ###########################Function of CBVR to return video path##########
-        video_path="acrobacia.mp4" 
+        video_path=ent1.get()
         IP_img=Label(window)
         IP_img.place(x=2,y=200)
         player=tkvideo(ent1.get(),IP_img,loop=1,size=(768,432))
         player.play()
+        cap = cv.VideoCapture(video_path)
+        keyFrames = keyFramesExtracion(cap, 6)
+        inputVideoFeatures = keyframesfeatures(keyframes)
+        videos = getVideos()
+        max_similarity = 0
         if(Method=="Average RGB"):
-    ############################Function of Average RGB to return video path##########
+            ############################Function of Average RGB to return video path##########
             #image_path='image2.jpg'
-            video_path='videos/video1.mp4'
+            # video_path='videos/video1.mp4'
+            method=0
+            
         elif(Method=="Histogram"):
             ############################Function of Histogram to return video path##########
             #image_path='image3.jpg'
-            video_path='videos/video1.mp4'
+            # video_path='videos/video1.mp4'
+            method=1
+            
         elif(Method=="Several Histograms"):
             ############################Function of Histogram to return video path##########
             #image_path='image4.jpg'
-            video_path='videos/video1.mp4'
+            # video_path='videos/video1.mp4'
+            method=2
         
-        
+        for video in videos:
+            DBvideoFeatures=[]
+            for keyFrame in video[2]:
+                DBvideoFeatures.append((keyFrame[2],keyFrame[3],keyFrame[4]))
+            
+            similarity = Similarity_Video(method, DBvideoFeatures, inputVideoFeatures)
+            
+            if(similarity > max_similarity):
+                max_similarity = similarity
+                video_index = video[0]
+                output_video_path = video[1]
+                
+                
         IPimg_L=Label(window,text="Input Video",bg='#1f666b',height=1,width=10,bd=6,font='Helvetica 11 bold')
         IPimg_L.place(x=20,y=160)
     
         R_img=Label(window)
         R_img.place(x=470,y=200)
-        player=tkvideo(video_path,R_img,loop=1,size=(768,432))
+        player=tkvideo(output_video_path, R_img, loop=1, size=(768,432))
         player.play()
 
         R_img_L=Label(window,text="Retieved Video",bg='#1f666b',height=1,width=12,bd=6,font='Helvetica 11 bold')
