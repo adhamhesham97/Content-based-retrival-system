@@ -118,19 +118,44 @@ def ShowImage():
             # image_path='image2.jpg'
         elif(Method=="Histogram"):
             ############################Function of Histogram to return image path##########
-            image_path='image3.jpg'
-            # TODO
+            #image_path='image3.jpg'
+            
+            Histogram = Histogram(img) ####
+            for image in images:
+                similarity = CompareHist(Histogram, image[3])
+                if(similarity > max_similarity):
+                    max_similarity = similarity
+                    image_index = image[0]
+                    image_path = image[1]
         elif(Method=="Several Histograms"):
             ############################Function of Histogram to return image path##########
-            image_path='image4.jpg'
-            # TODO
-        
-        
-        if(max_path == '0'): #video not image
+            #image_path='image4.jpg'
+           
+              L_H= SeveralHistograms(img,16) ####
+              for image in images:
+                similarity = Compare_SeveralHistograms(L_H, image[4])
+                if(similarity > max_similarity):
+                    max_similarity = similarity
+                    image_index = image[0]
+                    image_path = image[1]
+                #print(image_path)
+
+        if(image_path == '0'): #video not image
             video_Path = getKeyFrameVideo(image_index)[1]
-            # TODO
+            
+            IPimg_L=Label(window,text="Input Video",bg='#1f666b',height=1,width=10,bd=6,font='Helvetica 11 bold')
+            IPimg_L.place(x=20,y=160)
+        
+            R_img=Label(window)
+            R_img.place(x=470,y=200)
+            player=tkvideo('videos/'+video_Path, R_img, loop=1, size=(768,432))
+            player.play()
+    
+            R_img_L=Label(window,text="Retieved Video",bg='#1f666b',height=1,width=12,bd=6,font='Helvetica 11 bold')
+            R_img_L.place(x=520,y=160)
         else:
-            photo1=ImageTk.PhotoImage(Image.open(image_path))    
+            #print(image_path)
+            photo1=ImageTk.PhotoImage(Image.open('images/'+image_path))    
             R_img=Label(window)
             R_img.config(image=photo1)
             R_img.image=photo1
@@ -148,7 +173,7 @@ def ShowImage():
         player=tkvideo(ent1.get(),IP_img,loop=1,size=(768,432))
         player.play()
         cap = cv.VideoCapture(video_path)
-        keyFrames = keyFramesExtracion(cap, 6)
+        keyframes = keyFramesExtracion(cap, 6)
         inputVideoFeatures = keyframesfeatures(keyframes)
         videos = getVideos()
         max_similarity = 0
@@ -188,7 +213,7 @@ def ShowImage():
     
         R_img=Label(window)
         R_img.place(x=470,y=200)
-        player=tkvideo(output_video_path, R_img, loop=1, size=(768,432))
+        player=tkvideo('videos/'+output_video_path, R_img, loop=1, size=(768,432))
         player.play()
 
         R_img_L=Label(window,text="Retieved Video",bg='#1f666b',height=1,width=12,bd=6,font='Helvetica 11 bold')
