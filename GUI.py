@@ -94,7 +94,9 @@ def ShowImage():
     
     # else:
     if(Type=="Image"):
-        photo=ImageTk.PhotoImage(Image.open(ent1.get()))
+        w=400
+        h=350
+        photo=ImageTk.PhotoImage(Image.open(ent1.get()).resize((w, h), Image. ANTIALIAS))
         IP_img=Label(window)
         IP_img.config(image=photo)
         IP_img.image=photo
@@ -155,7 +157,9 @@ def ShowImage():
             R_img_L.place(x=520,y=160)
         else:
             #print(image_path)
-            photo1=ImageTk.PhotoImage(Image.open('images/'+image_path))    
+            # w=450
+            # h=350
+            photo1=ImageTk.PhotoImage(Image.open('images/'+image_path).resize((w, h), Image. ANTIALIAS))    
             R_img=Label(window)
             R_img.config(image=photo1)
             R_img.image=photo1
@@ -170,7 +174,9 @@ def ShowImage():
         video_path=ent1.get()
         IP_img=Label(window)
         IP_img.place(x=2,y=200)
-        player=tkvideo(ent1.get(),IP_img,loop=1,size=(768,432))
+        w=400
+        h=350
+        player=tkvideo(ent1.get(),IP_img,loop=1,size=(w,h))
         player.play()
         cap = cv.VideoCapture(video_path)
         keyframes = keyFramesExtracion(cap, 6)
@@ -196,10 +202,16 @@ def ShowImage():
             method=2
         
         for video in videos:
-            DBvideoFeatures=[]
+            # DBvideoFeatures=[]
+            rgb=[]
+            hist=[]
+            hist16=[]
             for keyFrame in video[2]:
-                DBvideoFeatures.append((keyFrame[2],keyFrame[3],keyFrame[4]))
+                rgb.append(keyFrame[2])
+                hist.append(keyFrame[3])
+                hist16.append(keyFrame[4])
             
+            DBvideoFeatures=(rgb, hist, hist16)
             similarity = Similarity_Video(method, DBvideoFeatures, inputVideoFeatures)
             
             if(similarity > max_similarity):
@@ -213,7 +225,7 @@ def ShowImage():
     
         R_img=Label(window)
         R_img.place(x=470,y=200)
-        player=tkvideo('videos/'+output_video_path, R_img, loop=1, size=(768,432))
+        player=tkvideo('videos/'+output_video_path, R_img, loop=1, size=(w,h))
         player.play()
 
         R_img_L=Label(window,text="Retieved Video",bg='#1f666b',height=1,width=12,bd=6,font='Helvetica 11 bold')
