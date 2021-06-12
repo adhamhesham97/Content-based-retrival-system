@@ -163,10 +163,10 @@ def ShowImage():
             R_img=Label(window)
             R_img.config(image=photo1)
             R_img.image=photo1
-            R_img.place(x=400,y=200)
+            R_img.place(x= 470, y=200)
             
             R_img_L=Label(window,text="Retieved Image",bg='#1f666b',height=1,width=12,bd=6,font='Helvetica 11 bold')
-            R_img_L.place(x=450,y=160)
+            R_img_L.place(x= 520, y=160)
     
     
     elif(Type=="Video"):
