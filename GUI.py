@@ -253,17 +253,17 @@ def vp_start_gui():
     
     Choose_L=Label(window,text="Choose the multimedia type: ",bg='#1f666b',font='Helvetica 11 bold').place(x=5,y=5)
     
-    Choose_L=Label(window,text="Choose the retrieval method: ",bg='#1f666b',font='Helvetica 11 bold').place(x=600,y=5)
+    Choose_L1=Label(window,text="Choose the retrieval method: ",bg='#1f666b',font='Helvetica 11 bold').place(x=600,y=5)
     
             
     combobox=ttk.Combobox(window,font='Helvetica 11')
     combobox['values']=('Average RGB','Histogram','Several Histograms')
-    combobox.place(x=805,y=5)
+    combobox.place(x=815,y=5)
     combobox.current(0)
     
     combobox1=ttk.Combobox(window,font='Helvetica 11',width=10)
     combobox1['values']=('Image','Video')
-    combobox1.place(x=210,y=5)
+    combobox1.place(x=212,y=5)
     combobox1.current(0)
     
     
