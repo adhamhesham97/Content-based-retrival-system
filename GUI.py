@@ -45,7 +45,7 @@ def vp_start_gui():
     
     global window
     window=Tk()
-    window.title('Content based multimedia retrival')
+    window.title('Content based multimedia retrieval')
     window.geometry("1000x500+150+150")
     window.columnconfigure(0,weight=2)
     window.configure(bg='#1f666b')
@@ -253,7 +253,7 @@ def vp_start_gui():
     
     Choose_L=Label(window,text="Choose the multimedia type: ",bg='#1f666b',font='Helvetica 11 bold').place(x=5,y=5)
     
-    Choose_L=Label(window,text="Choose the retrival method: ",bg='#1f666b',font='Helvetica 11 bold').place(x=600,y=5)
+    Choose_L=Label(window,text="Choose the retrieval method: ",bg='#1f666b',font='Helvetica 11 bold').place(x=600,y=5)
     
             
     combobox=ttk.Combobox(window,font='Helvetica 11')
