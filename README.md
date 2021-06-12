@@ -10,7 +10,7 @@ Frames are extracted from videos using the “KeyFramesExtraction” where frame
 **In the main/source code,** functions that have been written were:  
  * **KeyFramesExtraction:** as mentioned earlier, this function basically takes a video and extracts its frames by putting them in an array of frames called “KeyFrames” and returns that array.
  * **Keyframesfeatures:** this function extracts features from the frames retrieved from a video, where it takes the “KeyFrames” array and loops over it extracting the histograms and average RGB. It returns the variables: avgRGB, Histograms, layoutHistogram (an array of the several histograms of each frame).
- * **sliceImage:** it takes two attributes (an image and the desired factor of division). What this function does is that it divides the image into slices of size smaller than the given image by dividing the image’s width and height by the square root of the given factor. It then loops over the total number of divisions (vertically then horizontally), creates image slices with the new acquired dimensions and store these slices in an array that is later returned by the function.
+ * **SliceImage:** it takes two attributes (an image and the desired factor of division). What this function does is that it divides the image into slices of size smaller than the given image by dividing the image’s width and height by the square root of the given factor. It then loops over the total number of divisions (vertically then horizontally), creates image slices with the new acquired dimensions and store these slices in an array that is later returned by the function.
  * **CompareHist:** it takes two histograms, divides the minimum histogram by the second one and returns the value in an attribute called “intersection”.
  * **RGB_mean:** it takes an image and returns the average value for each channel of that image.
  * **Compare_avg_RGB:** it takes two avg RGB values and compares values of the same channel by the other value of the same channel.
@@ -32,8 +32,10 @@ Frames are extracted from videos using the “KeyFramesExtraction” where frame
 
  * First the user chooses **the type of multimedia** that is going to be used from the combo box in the top left corner whether it is an Image or a Video, then chooses **the retrieval method (Average RGB, Histogram, or Several Histograms)** from the other combo box on the top right corner. 
  * After choosing both the multimedia type and the retrieval method, the user presses the **Browse Files** button and **chooses a video/image to be retrieved.** 
- * Finally, before submitting the user must press the Build DB button where two folders/sections (one for images and the other for videos) appear in the blank area below. These sections are initially empty until the Submit button is pressed. 
- * An Exit button was created for the user to clear everything and close the program.
+ * A Build DB button for building our database and inserting images and videos from two folder (images , videos), it should be built before submitting .
+ * Finally, by pressing Submit button, the input and retrieved (images/videos) appear in the blank area below.
+ * A Restart button to clear everything to search for another image/video.
+ * An Exit button was created for the user to close the program.
 
 ## Testing Scenario
 * Retrieve an image from the database **using average RGB method.**  
