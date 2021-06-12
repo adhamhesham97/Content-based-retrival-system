@@ -27,7 +27,7 @@ Frames are extracted from videos using the “KeyFramesExtraction” where frame
 ## User Guide:
 <div align="center"> 
    <br />
-   <img src="https://user-images.githubusercontent.com/64116564/121778896-64697600-cb99-11eb-96e6-9a345131b467.jpeg" />  
+   <img src="https://user-images.githubusercontent.com/64116564/121779489-2a4da380-cb9c-11eb-9d26-5f85cb4cf5f1.jpeg" />  
 </div> 
 
  * First the user chooses **the type of multimedia** that is going to be used from the combo box in the top left corner whether it is an Image or a Video, then chooses **the retrieval method (Average RGB, Histogram, or Several Histograms)** from the other combo box on the top right corner. 
