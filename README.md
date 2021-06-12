@@ -66,6 +66,6 @@ Frames are extracted from videos using the “KeyFramesExtraction” where frame
   * Adham Hesham Hamed 
   * Aya Tarek El-Ashry
   * Yara Mohamed Hussien Zaki 
-  * Reem Mohamed Abd El-Rouf Mady
+  * Reem Mohamed Abd El-Raaouf Mady
   * Amr Yasser Mahmoud El-Gamal
   * Ahmed Abd El-Salam Helaly
