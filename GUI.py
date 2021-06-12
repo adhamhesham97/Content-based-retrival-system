@@ -122,9 +122,9 @@ def ShowImage():
             ############################Function of Histogram to return image path##########
             #image_path='image3.jpg'
             
-            Histogram = Histogram(img) ####
+            Histogram1 = Histogram(img) ####
             for image in images:
-                similarity = CompareHist(Histogram, image[3])
+                similarity = CompareHist(Histogram1, image[3])
                 if(similarity > max_similarity):
                     max_similarity = similarity
                     image_index = image[0]
@@ -143,9 +143,9 @@ def ShowImage():
                 #print(image_path)
 
         if(image_path == '0'): #video not image
-            video_Path = getKeyFrameVideo(image_index)[1]
-            
-            IPimg_L=Label(window,text="Input Video",bg='#1f666b',height=1,width=10,bd=6,font='Helvetica 11 bold')
+            video_Path = getKeyFrameVideo(image_index)
+            print(video_Path)
+            IPimg_L=Label(window,text="Input Image",bg='#1f666b',height=1,width=10,bd=6,font='Helvetica 11 bold')
             IPimg_L.place(x=20,y=160)
         
             R_img=Label(window)
